@@ -19,7 +19,7 @@ public class Run {
 			   + "y contiene saltos de linea\n"
 			   + "y mas texto.\n"
 			   + "\n"
-			   + "por cierto, Hola Mundo!!";
+			   + "por cierto, Hola Mundo usando git!!";
 		
 		ArchivoTexto archivo = new ArchivoTexto();
 		//archivo.verificarInfoArchivo();
