@@ -2,6 +2,7 @@ package archivos;
 
 import java.io.BufferedReader;
 import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,6 +10,8 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Archivos
@@ -47,22 +50,29 @@ public class ArchivoTexto {
 
 	public void lecturaBasica(String path) {
 		FileInputStream entrada = null;
-		try {
-			entrada = new FileInputStream(new File(path));
-			int byteEntrada = entrada.read();
-			while (byteEntrada != -1) {
-				System.out.write(byteEntrada);
-				byteEntrada = entrada.read();
-			}
-
-		} catch (IOException ex) {
-			System.out.println("No se puede leer archivo");
-		} finally {
+		File contenedor = new File(path);
+		if (contenedor.exists()) {//validacion si existe archivo
 			try {
-				entrada.close();
+				entrada = new FileInputStream(contenedor);
+				int byteEntrada = entrada.read();
+				while (byteEntrada != -1) {
+					
+					//System.out.write(byteEntrada);
+					System.out.println(byteEntrada);
+					byteEntrada = entrada.read();
+				}
+
 			} catch (IOException ex) {
-				System.out.println("========no se pudo cerrar archivo");
+				System.out.println("No se puede leer archivo");
+			} finally {
+				try {
+					entrada.close();
+				} catch (IOException ex) {
+					System.out.println("========no se pudo cerrar archivo");
+				}
 			}
+		} else {
+			System.out.println("========ARCHIVO NO EXISTE!!");
 		}
 	}
 
@@ -72,12 +82,19 @@ public class ArchivoTexto {
 		try {
 			entradaBase = new FileInputStream(new File(path));
 			entrada = new DataInputStream(entradaBase);
+			String cadenaTotal = "";
+			int total = 0;
 			String data = entrada.readLine();
+			//Integer data = entrada.readInt();
 			while (data != null) {
-				System.out.print(data);
+				cadenaTotal = cadenaTotal + data;
+				//total += data;
 				data = entrada.readLine();
+				//data = entrada.readInt();
 
 			}
+			System.out.print(cadenaTotal);
+			//System.out.print(total);
 
 		} catch (EOFException ex) {
 			System.out.println("Lectura finalizada");
@@ -90,6 +107,32 @@ public class ArchivoTexto {
 				System.out.println("========no se pudo cerrar archivo");
 			}
 		}
+	}
+	
+	public void escribirData() {
+		int entero = 10;
+		boolean booleano = true;
+		String cadena = "Cadena";
+		double doble = 125.25;
+		DataOutputStream salidaData = null;
+		try {
+			FileOutputStream salida = new FileOutputStream(new File("/home/jose/binariotest.txt"));
+			salidaData = new DataOutputStream(salida);
+			salidaData.writeInt(entero);
+			salidaData.writeBoolean(booleano);
+			salidaData.writeUTF(cadena);
+			salidaData.writeDouble(doble);
+		} catch (Exception e) {
+			System.out.println("=========== error");
+		} finally {
+			try {
+				salidaData.close();
+			} catch (IOException ex) {
+				Logger.getLogger(ArchivoTexto.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		}
+
+		
 	}
 
 	public void lecturaParaCaracteres(String path) {
