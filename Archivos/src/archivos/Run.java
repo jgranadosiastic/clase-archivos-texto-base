@@ -25,8 +25,14 @@ public class Run {
 		//archivo.verificarInfoArchivo();
 		//archivo.lecturaBasica("/home/jose/test.txt");
 		//archivo.lecturaDataBasica("/home/jose/test.txt");
-		archivo.escribirData();
+		//archivo.escribirData();
+		//archivo.escribirData();
+		//archivo.leerData();
+		
 		//archivo.escrituraParaCaracteres(textoAEscribir, "/home/jose/test2.txt");
+		archivo.lecturaParaCaracteres("/home/jose/lectura.txt");
+		
+		
 	}
 	
 }

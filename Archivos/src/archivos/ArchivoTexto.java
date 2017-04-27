@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -111,12 +112,12 @@ public class ArchivoTexto {
 	
 	public void escribirData() {
 		int entero = 10;
-		boolean booleano = true;
+		boolean booleano = false;
 		String cadena = "Cadena";
 		double doble = 125.25;
 		DataOutputStream salidaData = null;
 		try {
-			FileOutputStream salida = new FileOutputStream(new File("/home/jose/binariotest.txt"));
+			FileOutputStream salida = new FileOutputStream(new File("/home/jose/binariotest.txt"), true);
 			salidaData = new DataOutputStream(salida);
 			salidaData.writeInt(entero);
 			salidaData.writeBoolean(booleano);
@@ -131,8 +132,41 @@ public class ArchivoTexto {
 				Logger.getLogger(ArchivoTexto.class.getName()).log(Level.SEVERE, null, ex);
 			}
 		}
+	}
+	
+	public void leerData() {
+		int enteroLeido;
+		boolean booleanoLeido;
+		String cadenaLeida;
+		double doubleLeido;
+		DataInputStream entradaData = null;
+		try {
+			FileInputStream entrada = new FileInputStream(new File("/home/jose/binariotest.txt"));
+			entradaData = new DataInputStream(entrada);
+			while (true) {
 
+
+				enteroLeido = entradaData.readInt();
+				System.out.println("Entero leido: " + enteroLeido);
+				enteroLeido++;
+				System.out.println("entero leido y manipulado" + enteroLeido);
+				booleanoLeido = entradaData.readBoolean();
+				System.out.println("Booleano: " + booleanoLeido);
+				cadenaLeida = entradaData.readUTF();
+				System.out.println("Cadena: " + cadenaLeida);
+				doubleLeido = entradaData.readDouble();
+				System.out.println("Double: " + doubleLeido);
+			}
+		} catch (FileNotFoundException e) {
+			
 		
+		} catch (EOFException e) {
+			
+		
+		} catch (IOException e) {
+			System.out.println("===== FIN DE ARCHIVO");
+		
+		} 
 	}
 
 	public void lecturaParaCaracteres(String path) {
@@ -143,8 +177,26 @@ public class ArchivoTexto {
 			buffer = new BufferedReader(lector);
 			String data = buffer.readLine();
 			while (data != null) {
-				System.out.println(data);
+				//System.out.println(data);
+				if (data.contains(":")) {
+					/*int posicionDosP = data.indexOf(":");
+					String nuevaData = data.substring(posicionDosP + 1);
+					try {
+						double valorDouble = Double.valueOf(nuevaData);
+						System.out.println("valor double: " + (valorDouble +1) );
+					} catch (Exception e) {
+						//no me interesa manejar la excepcion
+					}*/
+					String[] arreglo = data.split(":");
+					try {
+						double valorDouble = Double.valueOf(arreglo[1]);
+						System.out.println("valor double: " + (valorDouble +1) );
+					} catch (Exception e) {
+						//no me interesa manejar la excepcion
+					}
+				}
 				data = buffer.readLine();
+				
 
 			}
 
@@ -164,7 +216,7 @@ public class ArchivoTexto {
 	public void escrituraParaCaracteres(String textoAEscribir, String pathArchivo) {
 		FileWriter escritor = null;
 		try {
-			escritor = new FileWriter(new File(pathArchivo));
+			escritor = new FileWriter(new File(pathArchivo), true);
 			escritor.write(textoAEscribir);
 		} catch (IOException e) {
 			System.out.println("============== error escribiendo en archivo");
